@@ -11,7 +11,6 @@ let bodyParser = require("body-parser"); // body-parser för json formatting
 app.use(bodyParser.json()); // för att parse json format till body.
 app.use(bodyParser.urlencoded({ extended: true })); // behövs för att processa data som skickats med POST
 app.use(express.static("public")); // för att komma åt filer i public 
-app.set("view engine", "ejs"); // använder mig av ejs för att kunna skriva ut javascript i html
 
 let httpserver = app.listen(port, function() {
     console.log(`Webbservern körs på ${port}`);
@@ -24,7 +23,7 @@ app.get("/", function(req, res) {
 });
 
 
-app.post("/", function (req, res) {
+app.post("/newpost", function (req, res) {
     console.log("Got a new post request!"); //loggar får en ny post request
 
     // Extrahera data från form submission.
@@ -61,6 +60,16 @@ app.post("/", function (req, res) {
     });
 });
 
-app.get("/", function(req, res) {
+// Läsa in data från posts.json och parsa befintlig data, för att skicka tillbaka posts
+app.get("/posts", function(req, res) {
+    fs.readFile("posts.json", "utf-8", (err,data) => {
+        if(err) {
+            console.log(err)
+            res.status(500).send("Internal Error");
+            return;
+        }
 
+        let posts = JSON.parse(data || '[]');
+        res.json({ posts })
+    });
 });
