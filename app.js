@@ -23,14 +23,15 @@ app.get("/", function(req, res) {
 });
 
 
-app.post("/newpost", function (req, res) {
+app.post("/posts", function (req, res) {
     console.log("Got a new post request!"); //loggar får en ny post request
 
     // Extrahera data från form submission.
     let name = req.body.name;
     let message = req.body.message;
+    let email = req.body.email;
 
-    let newPost = { name, message }; // skapar ny post i objekt.
+    let newPost = { name, message, email }; // skapar ny post i objekt.
 
     // läser in data från posts.json om error logga error och skicka status code 500
     fs.readFile("posts.json", "utf-8", (err, data) => {
@@ -61,7 +62,7 @@ app.post("/newpost", function (req, res) {
 });
 
 // Läsa in data från posts.json och parsa befintlig data, för att skicka tillbaka posts
-app.get("/posts", function(req, res) {
+app.get("/post", function(req, res) {
     fs.readFile("posts.json", "utf-8", (err,data) => {
         if(err) {
             console.log(err)
